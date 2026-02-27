@@ -1,30 +1,76 @@
 package com.apps.quantitymeasurement;
 
-public class QuantityMeasurementApp {
+import java.util.Objects;
 
-    // generic equality check for any length units
-    public static boolean demonstrateLengthEquality(Length l1, Length l2) {
-        return l1.equals(l2);
+public class Length {
+
+    private final double value;
+    private final LengthUnit unit;
+
+    // All units are defined relative to INCHES (base unit)
+    public enum LengthUnit {
+        INCHES(1.0),
+        FEET(12.0),
+        YARDS(36.0),
+        CENTIMETERS(0.393701);
+
+        private final double toInchesFactor;
+
+        LengthUnit(double toInchesFactor) {
+            this.toInchesFactor = toInchesFactor;
+        }
+
+        public double toInches(double value) {
+            return value * toInchesFactor;
+        }
+
+        public double fromInches(double inches) {
+            return inches / toInchesFactor;
+        }
     }
 
-    // helper method to compare two values with units
-    public static boolean demonstrateLengthComparison(
-            double value1, Length.LengthUnit unit1,
-            double value2, Length.LengthUnit unit2) {
-
-        Length length1 = new Length(value1, unit1);
-        Length length2 = new Length(value2, unit2);
-
-        return length1.equals(length2);
+    public Length(double value, LengthUnit unit) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("Invalid value");
+        }
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit cannot be null");
+        }
+        this.value = value;
+        this.unit = unit;
     }
 
-    // manual verification
-    public static void main(String[] args) {
+    // Convert current length to inches (base unit)
+    private double toBaseInches() {
+        return unit.toInches(value);
+    }
 
-        System.out.println(demonstrateLengthComparison(1.0, Length.LengthUnit.YARDS,
-                36.0, Length.LengthUnit.INCHES));
+    // UC3 + UC4 equality logic
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Length)) return false;
+        Length other = (Length) o;
+        return Math.abs(this.toBaseInches() - other.toBaseInches()) < 0.000001;
+    }
 
-        System.out.println(demonstrateLengthComparison(100.0, Length.LengthUnit.CENTIMETERS,
-                39.3701, Length.LengthUnit.INCHES));
+    @Override
+    public int hashCode() {
+        return Objects.hash(Math.round(toBaseInches() * 1_000_000));
+    }
+
+    // UC5: instance conversion
+    public Length convertTo(LengthUnit targetUnit) {
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
+        }
+        double inches = toBaseInches();
+        double converted = targetUnit.fromInches(inches);
+        return new Length(converted, targetUnit);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%.6f %s", value, unit);
     }
 }
