@@ -1,4 +1,5 @@
-package feetmeasurementequality;
+package com.apps.quantitymeasurement;
+
 public class QuantityMeasurementApp {
 
     // Inner class to represent Feet measurement
@@ -32,17 +33,12 @@ public class QuantityMeasurementApp {
             return Double.compare(this.value, other.value) == 0;
         }
     }
+
+    // Main method to demonstrate Feet equality check
     public static void main(String[] args) {
+        Feet f1 = new Feet(5.0);
+        Feet f2 = new Feet(5.0);
 
-        // User input (simulated)
-        Feet feet1 = new Feet(1.0);
-        Feet feet2 = new Feet(1.0);
-
-        // Equality check
-        boolean result = feet1.equals(feet2);
-
-        // Output
-        System.out.println("Input: 1.0 ft and 1.0 ft");
-        System.out.println("Output: Equal (" + result + ")");
+        System.out.println(f1.equals(f2)); // true
     }
 }
