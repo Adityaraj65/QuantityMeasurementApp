@@ -4,36 +4,43 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-
-class FeetMeasurementTest {
+public class QuantityMeasurementAppTest {
 
     @Test
-    void testEquality_SameValue() {
-        FeetMeasurement f1 = new FeetMeasurement(1.0);
-        FeetMeasurement f2 = new FeetMeasurement(1.0);
+    public void testFeetEquality_SameValue() {
+        Feet f1 = new Feet(5.0);
+        Feet f2 = new Feet(5.0);
 
-        assertTrue(f1.equals(f2));
+        assertEquals(f1, f2);
     }
 
     @Test
-    void testEquality_DifferentValue() {
-        FeetMeasurement f1 = new FeetMeasurement(1.0);
-        FeetMeasurement f2 = new FeetMeasurement(2.0);
+    public void testFeetEquality_DifferentValue() {
+        Feet f1 = new Feet(5.0);
+        Feet f2 = new Feet(6.0);
 
-        assertFalse(f1.equals(f2));
+        assertNotEquals(f1, f2);
     }
 
     @Test
-    void testEquality_NullComparison() {
-        FeetMeasurement f1 = new FeetMeasurement(1.0);
+    public void testFeetEquality_NullComparison() {
+        Feet f1 = new Feet(5.0);
 
-        assertFalse(f1.equals(null));
+        assertNotEquals(f1, null);
     }
 
     @Test
-    void testEquality_SameReference() {
-        FeetMeasurement f1 = new FeetMeasurement(1.0);
+    public void testFeetEquality_DifferentClass() {
+        Feet f1 = new Feet(5.0);
+        String other = "5.0";
 
-        assertTrue(f1.equals(f1));
+        assertNotEquals(f1, other);
+    }
+
+    @Test
+    public void testFeetEquality_SameReference() {
+        Feet f1 = new Feet(5.0);
+
+        assertEquals(f1, f1);
     }
 }
