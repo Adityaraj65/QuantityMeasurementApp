@@ -1,54 +1,101 @@
 package com.apps.quantitymeasurement;
 
-// class representing a length value with its unit
+/**
+ * QuantityLength class responsible for equality,
+ * conversion and arithmetic operations.
+ * All unit conversion logic is delegated to LengthUnit.
+ */
+
 public class Length {
 
-    // value of the length
     private double value;
-
-    // unit of the length
     private LengthUnit unit;
 
-    // enum storing units with conversion factor to inches
-    public enum LengthUnit {
-
-        FEET(12.0),
-        INCHES(1.0),
-        YARDS(36.0),
-        CENTIMETERS(0.393701);
-
-        private final double factor;
-
-        LengthUnit(double factor) {
-            this.factor = factor;
-        }
-
-        public double getFactor() {
-            return factor;
-        }
-    }
-
-    // constructor to create length object
+    // constructor
     public Length(double value, LengthUnit unit) {
+
+        if (unit == null) {
+			throw new IllegalArgumentException("Unit cannot be null");
+		}
+
+        if (!Double.isFinite(value)) {
+			throw new IllegalArgumentException("Invalid value");
+		}
+
         this.value = value;
         this.unit = unit;
     }
 
-    // convert this length to inches
-    private double convertToBaseUnit() {
-        return value * unit.getFactor();
+    public double getValue() {
+        return value;
     }
 
-    // compare two lengths using inches
-    private boolean compare(Length that) {
-
-        double thisInches = this.convertToBaseUnit();
-        double thatInches = that.convertToBaseUnit();
-
-        return Math.abs(thisInches - thatInches) < 0.01;
+    public LengthUnit getUnit() {
+        return unit;
     }
 
-    // override equals method
+    // convert this length to another unit
+    public Length convertTo(LengthUnit targetUnit) {
+
+        if (targetUnit == null) {
+			throw new IllegalArgumentException("Target unit cannot be null");
+		}
+
+        double baseValue = unit.convertToBaseUnit(value);
+
+        double converted = targetUnit.convertFromBaseUnit(baseValue);
+
+        return new Length(converted, targetUnit);
+    }
+
+    // UC6 addition
+    public Length add(Length thatLength) {
+
+        if (thatLength == null) {
+			throw new IllegalArgumentException("Length cannot be null");
+		}
+
+        return addAndConvert(thatLength, this.unit);
+    }
+
+    // UC7 addition with target unit
+    public Length add(Length length, LengthUnit targetUnit) {
+
+        if (length == null) {
+			throw new IllegalArgumentException("Length cannot be null");
+		}
+
+        if (targetUnit == null) {
+			throw new IllegalArgumentException("Target unit cannot be null");
+		}
+
+        return addAndConvert(length, targetUnit);
+    }
+
+    // internal method to perform addition
+    private Length addAndConvert(Length length, LengthUnit targetUnit) {
+
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+
+        double thatBase = length.unit.convertToBaseUnit(length.value);
+
+        double sumBase = thisBase + thatBase;
+
+        double result = targetUnit.convertFromBaseUnit(sumBase);
+
+        return new Length(result, targetUnit);
+    }
+
+    // compare two lengths
+    private boolean compare(Length thatLength) {
+
+        double thisBase = this.unit.convertToBaseUnit(this.value);
+
+        double thatBase = thatLength.unit.convertToBaseUnit(thatLength.value);
+
+        return Math.abs(thisBase - thatBase) < 0.01;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -65,86 +112,20 @@ public class Length {
         return compare(that);
     }
 
-    // convert to another unit
-    public Length convertTo(LengthUnit targetUnit) {
-
-        if (targetUnit == null) {
-			throw new IllegalArgumentException("Unit cannot be null");
-		}
-
-        double inches = convertToBaseUnit();
-
-        double converted = inches / targetUnit.getFactor();
-
-        converted = Math.round(converted * 100.0) / 100.0;
-
-        return new Length(converted, targetUnit);
-    }
-
-    // add two lengths
-    public Length add(Length that) {
-
-        if (that == null) {
-			throw new IllegalArgumentException("Length cannot be null");
-		}
-
-        double thisInches = this.convertToBaseUnit();
-        double thatInches = that.convertToBaseUnit();
-
-        double sum = thisInches + thatInches;
-
-        double result = sum / this.unit.getFactor();
-
-        result = Math.round(result * 100.0) / 100.0;
-
-        return new Length(result, this.unit);
-    }
-
-    // convert inches to target unit
-    private double convertFromBaseToTargetUnit(double inches, LengthUnit targetUnit) {
-
-        double value = inches / targetUnit.getFactor();
-
-        return Math.round(value * 100.0) / 100.0;
-    }
-
-    // readable output
     @Override
     public String toString() {
-        return value + " " + unit;
+        return "Quantity(" + value + ", " + unit + ")";
     }
 
-    public double getValue() {
-        return value;
+    // standalone test
+    public static void main(String[] args) {
+
+        Length length1 = new Length(1.0, LengthUnit.FEET);
+
+        Length length2 = new Length(12.0, LengthUnit.INCHES);
+
+        Length result = length1.add(length2, LengthUnit.FEET);
+
+        System.out.println(result);
     }
-
-    public LengthUnit getUnit() {
-        return unit;
-    }
- // helper method used by both add methods to convert and sum
-    private Length addAndConvert(Length length, LengthUnit targetUnit) {
-
-        double thisInches = this.convertToBaseUnit();
-        double thatInches = length.convertToBaseUnit();
-
-        double sumInches = thisInches + thatInches;
-
-        double converted = convertFromBaseToTargetUnit(sumInches, targetUnit);
-
-        return new Length(converted, targetUnit);
-    }
- // add two lengths and return result in specified target unit
-    public Length add(Length length, LengthUnit targetUnit) {
-
-        if (length == null) {
-			throw new IllegalArgumentException("Length cannot be null");
-		}
-
-        if (targetUnit == null) {
-			throw new IllegalArgumentException("Target unit cannot be null");
-		}
-
-        return addAndConvert(length, targetUnit);
-    }
- 
 }
