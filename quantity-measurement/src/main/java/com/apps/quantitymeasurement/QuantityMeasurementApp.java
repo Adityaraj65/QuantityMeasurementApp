@@ -34,7 +34,12 @@ public class QuantityMeasurementApp {
     public static Length demonstrateLengthAddition(Length length1, Length length2) {
         return length1.add(length2);
     }
+ // demonstrate addition with explicit target unit
+    public static Length demonstrateLengthAddition(Length length1, Length length2, Length.LengthUnit targetUnit) {
 
+        return length1.add(length2, targetUnit);
+    }
+ 
     public static void main(String[] args) {
 
         Length length1 = new Length(1.0, Length.LengthUnit.FEET);

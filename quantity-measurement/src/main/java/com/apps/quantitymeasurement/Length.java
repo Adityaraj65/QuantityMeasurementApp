@@ -121,4 +121,30 @@ public class Length {
     public LengthUnit getUnit() {
         return unit;
     }
+ // helper method used by both add methods to convert and sum
+    private Length addAndConvert(Length length, LengthUnit targetUnit) {
+
+        double thisInches = this.convertToBaseUnit();
+        double thatInches = length.convertToBaseUnit();
+
+        double sumInches = thisInches + thatInches;
+
+        double converted = convertFromBaseToTargetUnit(sumInches, targetUnit);
+
+        return new Length(converted, targetUnit);
+    }
+ // add two lengths and return result in specified target unit
+    public Length add(Length length, LengthUnit targetUnit) {
+
+        if (length == null) {
+			throw new IllegalArgumentException("Length cannot be null");
+		}
+
+        if (targetUnit == null) {
+			throw new IllegalArgumentException("Target unit cannot be null");
+		}
+
+        return addAndConvert(length, targetUnit);
+    }
+ 
 }
