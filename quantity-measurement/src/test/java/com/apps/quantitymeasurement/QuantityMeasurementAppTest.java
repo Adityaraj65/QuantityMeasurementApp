@@ -261,4 +261,99 @@ public class QuantityMeasurementAppTest {
 
         assertTrue(result.equals(new Quantity<>(3.0, LengthUnit.FEET)));
     }
+    
+    @Test
+    public void litreEqualsMillilitre(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        assertTrue(v1.equals(v2));
+    }
+
+    @Test
+    public void litreNotEqualsDifferentValue(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> v2 = new Quantity<>(2.0, VolumeUnit.LITRE);
+
+        assertFalse(v1.equals(v2));
+    }
+
+    @Test
+    public void gallonEqualsLitres(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.GALLON);
+        Quantity<VolumeUnit> v2 = new Quantity<>(3.78541, VolumeUnit.LITRE);
+
+        assertTrue(v1.equals(v2));
+    }
+
+    @Test
+    public void convertLitreToMillilitre(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+
+        Quantity<VolumeUnit> result = v1.convertTo(VolumeUnit.MILLILITRE);
+
+        Quantity<VolumeUnit> expected = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        assertTrue(result.equals(expected));
+    }
+
+    @Test
+    public void convertGallonToLitre(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.GALLON);
+
+        Quantity<VolumeUnit> result = v1.convertTo(VolumeUnit.LITRE);
+
+        Quantity<VolumeUnit> expected = new Quantity<>(3.78541, VolumeUnit.LITRE);
+
+        assertTrue(result.equals(expected));
+    }
+
+    @Test
+    public void addLitreAndMillilitre(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        Quantity<VolumeUnit> result = v1.add(v2);
+
+        Quantity<VolumeUnit> expected = new Quantity<>(2.0, VolumeUnit.LITRE);
+
+        assertTrue(result.equals(expected));
+    }
+
+    @Test
+    public void addWithTargetUnitMillilitre(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+
+        Quantity<VolumeUnit> result = v1.add(v2, VolumeUnit.MILLILITRE);
+
+        Quantity<VolumeUnit> expected = new Quantity<>(2000.0, VolumeUnit.MILLILITRE);
+
+        assertTrue(result.equals(expected));
+    }
+
+    @Test
+    public void volumeNotEqualToLength(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<LengthUnit> l1 = new Quantity<>(1.0, LengthUnit.FEET);
+
+        assertFalse(v1.equals(l1));
+    }
+
+    @Test
+    public void volumeNotEqualToWeight(){
+
+        Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<WeightUnit> w1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+
+        assertFalse(v1.equals(w1));
+    }
 }

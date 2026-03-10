@@ -20,11 +20,14 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        Quantity<LengthUnit> l1 = new Quantity<>(1.0, LengthUnit.FEET);
-        Quantity<LengthUnit> l2 = new Quantity<>(12.0, LengthUnit.INCHES);
+    	Quantity<VolumeUnit> v1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+    	Quantity<VolumeUnit> v2 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
 
-        Quantity<LengthUnit> result = demonstrateAddition(l1, l2, LengthUnit.FEET);
+    	System.out.println(v1.equals(v2));
 
-        System.out.println(result);
+    	Quantity<VolumeUnit> result = v1.add(v2);
+    	System.out.println(result);
+
+    	System.out.println(v1.convertTo(VolumeUnit.MILLILITRE));
     }
 }
