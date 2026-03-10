@@ -9,12 +9,15 @@ public class Quantity<U extends IMeasurable> {
     private final U unit;
 
     public Quantity(double value, U unit) {
+
         if (unit == null) {
-            throw new IllegalArgumentException("Unit cannot be null");
-        }
+			throw new IllegalArgumentException("Unit cannot be null");
+		}
+
         if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Value must be finite");
-        }
+			throw new IllegalArgumentException("Value must be finite");
+		}
+
         this.value = value;
         this.unit = unit;
     }
@@ -27,8 +30,6 @@ public class Quantity<U extends IMeasurable> {
         return unit;
     }
 
-    // ENUM FOR OPERATIONS 
-
     private enum ArithmeticOperation {
 
         ADD((a, b) -> a + b),
@@ -37,8 +38,8 @@ public class Quantity<U extends IMeasurable> {
 
         DIVIDE((a, b) -> {
             if (b == 0) {
-                throw new ArithmeticException("Division by zero");
-            }
+				throw new ArithmeticException("Division by zero");
+			}
             return a / b;
         });
 
@@ -53,28 +54,24 @@ public class Quantity<U extends IMeasurable> {
         }
     }
 
-   //VALIDATION 
-
     private void validateArithmeticOperands(Quantity<U> other, U targetUnit, boolean requireTarget) {
 
         if (other == null) {
-            throw new IllegalArgumentException("Other quantity cannot be null");
-        }
+			throw new IllegalArgumentException("Other quantity cannot be null");
+		}
 
         if (!unit.getClass().equals(other.unit.getClass())) {
-            throw new IllegalArgumentException("Incompatible unit types");
-        }
+			throw new IllegalArgumentException("Incompatible unit types");
+		}
 
         if (!Double.isFinite(value) || !Double.isFinite(other.value)) {
-            throw new IllegalArgumentException("Values must be finite");
-        }
+			throw new IllegalArgumentException("Values must be finite");
+		}
 
         if (requireTarget && targetUnit == null) {
-            throw new IllegalArgumentException("Target unit cannot be null");
-        }
+			throw new IllegalArgumentException("Target unit cannot be null");
+		}
     }
-
-   // CORE HELPER 
 
     private double performBaseArithmetic(Quantity<U> other, ArithmeticOperation operation) {
 
@@ -88,13 +85,13 @@ public class Quantity<U extends IMeasurable> {
         return Math.round(val * 100.0) / 100.0;
     }
 
-  // ADD 
-
     public Quantity<U> add(Quantity<U> other) {
         return add(other, this.unit);
     }
 
     public Quantity<U> add(Quantity<U> other, U targetUnit) {
+
+        unit.validateOperationSupport("addition");
 
         validateArithmeticOperands(other, targetUnit, true);
 
@@ -105,13 +102,13 @@ public class Quantity<U extends IMeasurable> {
         return new Quantity<>(roundToTwoDecimals(result), targetUnit);
     }
 
-    // SUBTRACT 
-
     public Quantity<U> subtract(Quantity<U> other) {
         return subtract(other, this.unit);
     }
 
     public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
+
+        unit.validateOperationSupport("subtraction");
 
         validateArithmeticOperands(other, targetUnit, true);
 
@@ -121,30 +118,27 @@ public class Quantity<U extends IMeasurable> {
 
         return new Quantity<>(roundToTwoDecimals(result), targetUnit);
     }
- //DIVIDE 
 
     public double divide(Quantity<U> other) {
+
+        unit.validateOperationSupport("division");
 
         validateArithmeticOperands(other, null, false);
 
         return performBaseArithmetic(other, ArithmeticOperation.DIVIDE);
     }
 
-// CONVERSION 
-
     public Quantity<U> convertTo(U targetUnit) {
 
         if (targetUnit == null) {
-            throw new IllegalArgumentException("Target unit cannot be null");
-        }
+			throw new IllegalArgumentException("Target unit cannot be null");
+		}
 
         double base = unit.convertToBaseUnit(value);
         double result = targetUnit.convertFromBaseUnit(base);
 
         return new Quantity<>(result, targetUnit);
     }
-
-    /* ---------------------- EQUALITY ---------------------- */
 
     @Override
     public boolean equals(Object obj) {
@@ -160,8 +154,8 @@ public class Quantity<U extends IMeasurable> {
         Quantity<?> other = (Quantity<?>) obj;
 
         if (!unit.getClass().equals(other.unit.getClass())) {
-            return false;
-        }
+			return false;
+		}
 
         double base1 = unit.convertToBaseUnit(value);
         double base2 = other.unit.convertToBaseUnit(other.value);
