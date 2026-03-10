@@ -7,29 +7,24 @@ public enum LengthUnit implements IMeasurable {
     YARDS(3.0),
     CENTIMETERS(0.0328084);
 
-    private final double conversionFactor;
+    private final double factor;
 
-    LengthUnit(double conversionFactor) {
-        this.conversionFactor = conversionFactor;
+    LengthUnit(double factor) {
+        this.factor = factor;
     }
 
     @Override
-    public double getConversionFactor() {
-        return conversionFactor;
+	public double convertToBaseUnit(double value) {
+        return value * factor;
     }
 
     @Override
-    public double convertToBaseUnit(double value) {
-        return value * conversionFactor;
+	public double convertFromBaseUnit(double baseValue) {
+        return baseValue / factor;
     }
 
     @Override
-    public double convertFromBaseUnit(double baseValue) {
-        return baseValue / conversionFactor;
-    }
-
-    @Override
-    public String getUnitName() {
+	public String getUnitName() {
         return name();
     }
 }
