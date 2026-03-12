@@ -2,7 +2,7 @@ package com.apps.quantitymeasurement;
 
 import java.util.Objects;
 
-public class Quantity<U extends IMeasurable> {
+public class Quantity<U extends Enum<U> & IMeasurable> {
 
     private final double value;
     private final U unit;
@@ -42,10 +42,6 @@ public class Quantity<U extends IMeasurable> {
 
     public Quantity<U> convertTo(U targetUnit) {
 
-        if (targetUnit == null) {
-			throw new IllegalArgumentException("Target unit cannot be null");
-		}
-
         double base = unit.convertToBaseUnit(value);
         double result = targetUnit.convertFromBaseUnit(base);
 
@@ -58,8 +54,6 @@ public class Quantity<U extends IMeasurable> {
 
     public Quantity<U> add(Quantity<U> other, U targetUnit) {
 
-        unit.validateOperationSupport("addition");
-
         validateCategory(other);
 
         double base1 = unit.convertToBaseUnit(value);
@@ -69,47 +63,9 @@ public class Quantity<U extends IMeasurable> {
 
         double result = targetUnit.convertFromBaseUnit(sum);
 
-        result = Math.round(result * 100.0) / 100.0;
+        result = Math.round(result * 1000.0) / 1000.0;
 
         return new Quantity<>(result, targetUnit);
-    }
-
-    public Quantity<U> subtract(Quantity<U> other) {
-        return subtract(other, this.unit);
-    }
-
-    public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
-
-        unit.validateOperationSupport("subtraction");
-
-        validateCategory(other);
-
-        double base1 = unit.convertToBaseUnit(value);
-        double base2 = other.unit.convertToBaseUnit(other.value);
-
-        double diff = base1 - base2;
-
-        double result = targetUnit.convertFromBaseUnit(diff);
-
-        result = Math.round(result * 100.0) / 100.0;
-
-        return new Quantity<>(result, targetUnit);
-    }
-
-    public double divide(Quantity<U> other) {
-
-        unit.validateOperationSupport("division");
-
-        validateCategory(other);
-
-        double base1 = unit.convertToBaseUnit(value);
-        double base2 = other.unit.convertToBaseUnit(other.value);
-
-        if (base2 == 0) {
-			throw new ArithmeticException("Division by zero");
-		}
-
-        return base1 / base2;
     }
 
     @Override
