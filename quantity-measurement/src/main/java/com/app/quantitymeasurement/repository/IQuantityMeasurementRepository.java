@@ -2,23 +2,18 @@ package com.app.quantitymeasurement.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
 
-public interface IQuantityMeasurementRepository {
+@Repository
+public interface IQuantityMeasurementRepository 
+        extends JpaRepository<QuantityMeasurementEntity, Long> {
 
-    void save(QuantityMeasurementEntity entity);
+    // Custom query methods (Spring auto-implements)
 
-    List<QuantityMeasurementEntity> getAllMeasurements();
+    List<QuantityMeasurementEntity> findByOperation(String operation);
 
-    List<QuantityMeasurementEntity> getByOperation(String operation);
-
-    List<QuantityMeasurementEntity> getByMeasurementType(String type);
-
-    int getTotalCount();
-
-    void deleteAll();
-
-    String getPoolStatistics();
-
-    void releaseResources();
+    List<QuantityMeasurementEntity> findByMeasurementType(String measurementType);
 }

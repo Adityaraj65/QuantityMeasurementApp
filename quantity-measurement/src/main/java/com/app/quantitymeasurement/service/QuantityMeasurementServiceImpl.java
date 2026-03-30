@@ -1,5 +1,8 @@
 package com.app.quantitymeasurement.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.app.quantitymeasurement.entity.QuantityDTO;
 import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
 import com.app.quantitymeasurement.exception.QuantityMeasurementException;
@@ -11,10 +14,12 @@ import com.app.quantitymeasurement.unit.TemperatureUnit;
 import com.app.quantitymeasurement.unit.VolumeUnit;
 import com.app.quantitymeasurement.unit.WeightUnit;
 
+@Service
 public class QuantityMeasurementServiceImpl implements IQuantityMeasurementService {
 
     private final IQuantityMeasurementRepository repository;
 
+    @Autowired
     public QuantityMeasurementServiceImpl(IQuantityMeasurementRepository repository) {
         this.repository = repository;
     }
