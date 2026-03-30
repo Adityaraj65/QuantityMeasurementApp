@@ -13,7 +13,12 @@ bin/
 .settings/
 .factorypath
 .loadpath
+# Eclipse
+.project
 
+# IntelliJ
+.idea/
+*.iml
 
 ####################################
 # IntelliJ IDEA
