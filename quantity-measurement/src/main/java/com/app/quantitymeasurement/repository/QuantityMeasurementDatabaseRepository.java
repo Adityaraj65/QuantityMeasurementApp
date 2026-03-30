@@ -95,4 +95,5 @@ public class QuantityMeasurementDatabaseRepository
 
     @Override
     public void releaseResources() {}
+    
 }
