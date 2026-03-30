@@ -1,51 +1,61 @@
 package com.apps.quantitymeasurement;
 
-// class used to demonstrate operations
+/**
+ * QuantityMeasurementApp
+ * Demonstrates equality, conversion and addition operations.
+ */
+
 public class QuantityMeasurementApp {
 
-    // check equality
+    // equality demonstration
     public static boolean demonstrateLengthEquality(Length length1, Length length2) {
+
         return length1.equals(length2);
     }
 
-    // compare two values with units
-    public static boolean demonstrateLengthComparison(double value1, Length.LengthUnit unit1, double value2, Length.LengthUnit unit2) {
+    // comparison demonstration
+    public static boolean demonstrateLengthComparison(double value1, LengthUnit unit1, double value2, LengthUnit unit2) {
 
         Length length1 = new Length(value1, unit1);
+
         Length length2 = new Length(value2, unit2);
 
         return demonstrateLengthEquality(length1, length2);
     }
 
-    // convert using raw value
-    public static Length demonstrateLengthConversion(double value, Length.LengthUnit fromUnit, Length.LengthUnit toUnit) {
+    // conversion using raw values
+    public static Length demonstrateLengthConversion(double value, LengthUnit fromUnit, LengthUnit toUnit) {
 
         Length length = new Length(value, fromUnit);
 
         return length.convertTo(toUnit);
     }
 
-    // convert using object
-    public static Length demonstrateLengthConversion(Length length, Length.LengthUnit toUnit) {
+    // conversion using object
+    public static Length demonstrateLengthConversion(Length length, LengthUnit toUnit) {
+
         return length.convertTo(toUnit);
     }
 
     // UC6 addition
     public static Length demonstrateLengthAddition(Length length1, Length length2) {
+
         return length1.add(length2);
     }
- // demonstrate addition with explicit target unit
-    public static Length demonstrateLengthAddition(Length length1, Length length2, Length.LengthUnit targetUnit) {
+
+    // UC7 addition with explicit target unit
+    public static Length demonstrateLengthAddition(Length length1, Length length2, LengthUnit targetUnit) {
 
         return length1.add(length2, targetUnit);
     }
- 
+
     public static void main(String[] args) {
 
-        Length length1 = new Length(1.0, Length.LengthUnit.FEET);
-        Length length2 = new Length(12.0, Length.LengthUnit.INCHES);
+        Length length1 = new Length(1.0, LengthUnit.FEET);
 
-        Length result = demonstrateLengthAddition(length1, length2);
+        Length length2 = new Length(12.0, LengthUnit.INCHES);
+
+        Length result = demonstrateLengthAddition(length1, length2, LengthUnit.FEET);
 
         System.out.println(result);
     }
