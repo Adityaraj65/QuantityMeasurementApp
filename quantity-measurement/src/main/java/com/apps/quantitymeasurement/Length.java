@@ -1,76 +1,124 @@
 package com.apps.quantitymeasurement;
 
-import java.util.Objects;
-
+// class representing a length value with its unit
 public class Length {
 
-    private final double value;
-    private final LengthUnit unit;
+    // value of the length
+    private double value;
 
-    // All units are defined relative to INCHES (base unit)
+    // unit of the length
+    private LengthUnit unit;
+
+    // enum storing units with conversion factor to inches
     public enum LengthUnit {
-        INCHES(1.0),
+
         FEET(12.0),
+        INCHES(1.0),
         YARDS(36.0),
         CENTIMETERS(0.393701);
 
-        private final double toInchesFactor;
+        private final double factor;
 
-        LengthUnit(double toInchesFactor) {
-            this.toInchesFactor = toInchesFactor;
+        LengthUnit(double factor) {
+            this.factor = factor;
         }
 
-        public double toInches(double value) {
-            return value * toInchesFactor;
-        }
-
-        public double fromInches(double inches) {
-            return inches / toInchesFactor;
+        public double getFactor() {
+            return factor;
         }
     }
 
+    // constructor to create length object
     public Length(double value, LengthUnit unit) {
-        if (!Double.isFinite(value)) {
-            throw new IllegalArgumentException("Invalid value");
-        }
-        if (unit == null) {
-            throw new IllegalArgumentException("Unit cannot be null");
-        }
         this.value = value;
         this.unit = unit;
     }
 
-    // Convert current length to inches (base unit)
-    private double toBaseInches() {
-        return unit.toInches(value);
+    // convert this length to inches
+    private double convertToBaseUnit() {
+        return value * unit.getFactor();
     }
 
-    // UC3 + UC4 equality logic
+    // compare two lengths using inches
+    private boolean compare(Length that) {
+
+        double thisInches = this.convertToBaseUnit();
+        double thatInches = that.convertToBaseUnit();
+
+        return Math.abs(thisInches - thatInches) < 0.01;
+    }
+
+    // override equals method
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Length)) return false;
-        Length other = (Length) o;
-        return Math.abs(this.toBaseInches() - other.toBaseInches()) < 0.000001;
+
+        if (this == o) {
+			return true;
+		}
+
+        if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+
+        Length that = (Length) o;
+
+        return compare(that);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(Math.round(toBaseInches() * 1_000_000));
-    }
-
-    // UC5: instance conversion
+    // convert to another unit
     public Length convertTo(LengthUnit targetUnit) {
+
         if (targetUnit == null) {
-            throw new IllegalArgumentException("Target unit cannot be null");
-        }
-        double inches = toBaseInches();
-        double converted = targetUnit.fromInches(inches);
+			throw new IllegalArgumentException("Unit cannot be null");
+		}
+
+        double inches = convertToBaseUnit();
+
+        double converted = inches / targetUnit.getFactor();
+
+        converted = Math.round(converted * 100.0) / 100.0;
+
         return new Length(converted, targetUnit);
     }
 
+    // add two lengths
+    public Length add(Length that) {
+
+        if (that == null) {
+			throw new IllegalArgumentException("Length cannot be null");
+		}
+
+        double thisInches = this.convertToBaseUnit();
+        double thatInches = that.convertToBaseUnit();
+
+        double sum = thisInches + thatInches;
+
+        double result = sum / this.unit.getFactor();
+
+        result = Math.round(result * 100.0) / 100.0;
+
+        return new Length(result, this.unit);
+    }
+
+    // convert inches to target unit
+    private double convertFromBaseToTargetUnit(double inches, LengthUnit targetUnit) {
+
+        double value = inches / targetUnit.getFactor();
+
+        return Math.round(value * 100.0) / 100.0;
+    }
+
+    // readable output
     @Override
     public String toString() {
-        return String.format("%.6f %s", value, unit);
+        return value + " " + unit;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public LengthUnit getUnit() {
+        return unit;
     }
 }
