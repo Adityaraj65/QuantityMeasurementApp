@@ -1,11 +1,17 @@
 package com.app.quantitymeasurement.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
+/**
+ * Entity saved in database
+ */
 @Entity
 @Table(name = "quantity_measurement")
 public class QuantityMeasurementEntity {
@@ -14,34 +20,43 @@ public class QuantityMeasurementEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private double thisValue;
+    private double thatValue;
     private String operation;
-    private String result;
-    private String error;
-    private String measurementType;
 
-    // Default constructor (MANDATORY for JPA)
-    public QuantityMeasurementEntity() {}
+    private double resultValue;
 
-    // Parameterized constructor
-    public QuantityMeasurementEntity(String operation, String result,
-                                     String error, String measurementType) {
-        this.operation = operation;
-        this.result = result;
-        this.error = error;
-        this.measurementType = measurementType;
+    private boolean error;
+    private String errorMessage;
+
+    private LocalDateTime createdAt;
+
+    /**
+     * Automatically set time before saving
+     */
+    @PrePersist
+    public void setTime() {
+        this.createdAt = LocalDateTime.now();
     }
 
-    // Getters
-    public Long getId() { return id; }
-    public String getOperation() { return operation; }
-    public String getResult() { return result; }
-    public String getError() { return error; }
-    public String getMeasurementType() { return measurementType; }
+    // getters & setters
 
-    // Setters (IMPORTANT for JPA)
-    public void setId(Long id) { this.id = id; }
-    public void setOperation(String operation) { this.operation = operation; }
-    public void setResult(String result) { this.result = result; }
-    public void setError(String error) { this.error = error; }
-    public void setMeasurementType(String measurementType) { this.measurementType = measurementType; }
+    public void setThisValue(double thisValue) {
+        this.thisValue = thisValue;
+    }
+    public void setThatValue(double thatValue) {
+        this.thatValue = thatValue;
+    }
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+    public void setResultValue(double resultValue) {
+        this.resultValue = resultValue;
+    }
+    public void setError(boolean error) {
+        this.error = error;
+    }
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }

@@ -7,13 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
 
-@Repository
-public interface IQuantityMeasurementRepository 
-        extends JpaRepository<QuantityMeasurementEntity, Long> {
+/**
+ * JPA repository (no SQL needed)
+ */
 
-    // Custom query methods (Spring auto-implements)
+public interface QuantityMeasurementRepository
+        extends JpaRepository<QuantityMeasurementEntity, Long> {
 
     List<QuantityMeasurementEntity> findByOperation(String operation);
 
-    List<QuantityMeasurementEntity> findByMeasurementType(String measurementType);
+    List<QuantityMeasurementEntity> findByErrorTrue();
 }
