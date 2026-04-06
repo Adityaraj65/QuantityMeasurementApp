@@ -1,13 +1,11 @@
 package com.app.quantitymeasurement.model;
 
-/**
- * Response object sent back to frontend
- */
 public class QuantityMeasurementDTO {
 
     private double thisValue;
     private double thatValue;
-    private String operation;
+
+    private OperationType operation;
 
     private String resultString;
     private double resultValue;
@@ -15,16 +13,14 @@ public class QuantityMeasurementDTO {
     private boolean error;
     private String errorMessage;
 
-    // getters & setters
-
     public double getThisValue() { return thisValue; }
     public void setThisValue(double thisValue) { this.thisValue = thisValue; }
 
     public double getThatValue() { return thatValue; }
     public void setThatValue(double thatValue) { this.thatValue = thatValue; }
 
-    public String getOperation() { return operation; }
-    public void setOperation(String operation) { this.operation = operation; }
+    public OperationType getOperation() { return operation; }
+    public void setOperation(OperationType operation) { this.operation = operation; }
 
     public String getResultString() { return resultString; }
     public void setResultString(String resultString) { this.resultString = resultString; }

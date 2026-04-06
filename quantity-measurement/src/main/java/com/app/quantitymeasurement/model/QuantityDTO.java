@@ -1,34 +1,27 @@
 package com.app.quantitymeasurement.model;
 
+import jakarta.annotation.Nonnull;
+import jakarta.validation.constraints.NotBlank;
+
 public class QuantityDTO {
 
-    private double value;
+    @Nonnull
+    private Double value;
+
+    @NotBlank
     private String unit;
+
+    @NotBlank
     private String measurementType;
 
-    public QuantityDTO() {}   // ✅ REQUIRED
+    public QuantityDTO() {}
 
-    public double getValue() {
-        return value;
-    }
+    public Double getValue() { return value; }
+    public void setValue(Double value) { this.value = value; }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+    public String getUnit() { return unit; }
+    public void setUnit(String unit) { this.unit = unit; }
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public String getMeasurementType() {
-        return measurementType;
-    }
-
-    public void setMeasurementType(String measurementType) {
-        this.measurementType = measurementType;
-    }
+    public String getMeasurementType() { return measurementType; }
+    public void setMeasurementType(String measurementType) { this.measurementType = measurementType; }
 }
