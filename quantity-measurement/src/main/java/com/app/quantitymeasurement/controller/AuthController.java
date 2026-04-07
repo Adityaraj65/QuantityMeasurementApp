@@ -21,7 +21,7 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestBody User user) {
 
-        // 🔥 CHECK DUPLICATE EMAIL HERE
+        // CHECK DUPLICATE EMAIL HERE
         if (repository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("User already exists");
         }

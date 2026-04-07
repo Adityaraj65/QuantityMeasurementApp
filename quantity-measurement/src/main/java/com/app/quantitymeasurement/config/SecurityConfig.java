@@ -15,7 +15,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .csrf(csrf -> csrf.disable())   // ✅ VERY IMPORTANT
+            .csrf(csrf -> csrf.disable())   
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/**").permitAll()   // login/register allowed
                     .anyRequest().authenticated()              // rest secured
