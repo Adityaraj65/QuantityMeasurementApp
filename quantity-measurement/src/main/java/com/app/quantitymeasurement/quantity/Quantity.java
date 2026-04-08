@@ -20,40 +20,27 @@ public class Quantity {
         return unit;
     }
 
-    public Quantity convertTo(IMeasurable target) {
-
-        double base = unit.convertToBaseUnit(value);
-        double converted = target.convertFromBaseUnit(base);
-
-        return new Quantity(converted, target);
-    }
-
-    public Quantity add(Quantity other, IMeasurable target) {
-
-        double base1 = unit.convertToBaseUnit(this.value);
-        double base2 = other.unit.convertToBaseUnit(other.value);
-
-        double sum = base1 + base2;
-        double result = target.convertFromBaseUnit(sum);
-
-        return new Quantity(result, target);
-    }
-
+    /**
+     * Checks equality by comparing values in their base units.
+     */
     @Override
     public boolean equals(Object obj) {
-
         if (this == obj) {
 			return true;
 		}
-        if (!(obj instanceof Quantity)) {
+        if (!(obj instanceof Quantity other)) {
 			return false;
 		}
-
-        Quantity other = (Quantity) obj;
 
         double base1 = unit.convertToBaseUnit(this.value);
         double base2 = other.unit.convertToBaseUnit(other.value);
 
+        // Using a small epsilon for double comparison to avoid precision issues
         return Math.abs(base1 - base2) < 0.0001;
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(unit.convertToBaseUnit(value));
     }
 }
