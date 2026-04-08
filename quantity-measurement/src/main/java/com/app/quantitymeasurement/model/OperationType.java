@@ -1,7 +1,7 @@
 package com.app.quantitymeasurement.model;
 
 /**
- * Enum for all operations supported
+ * Defines the types of operations supported by the system.
  */
 public enum OperationType {
     ADD, SUBTRACT, MULTIPLY, DIVIDE, COMPARE, CONVERT

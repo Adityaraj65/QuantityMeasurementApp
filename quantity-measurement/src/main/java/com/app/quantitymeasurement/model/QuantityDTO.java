@@ -1,27 +1,50 @@
 package com.app.quantitymeasurement.model;
 
-import jakarta.annotation.Nonnull;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuantityDTO {
 
-    @Nonnull
+    @NotNull(message = "Value cannot be null")
     private Double value;
 
-    @NotBlank
+    @NotNull(message = "Unit cannot be null")
     private String unit;
 
-    @NotBlank
+    @NotNull(message = "Measurement Type cannot be null")
+    @Pattern(regexp = "LengthUnit|VolumeUnit|WeightUnit|TemperatureUnit", 
+             message = "Invalid Measurement Type")
     private String measurementType;
 
-    public QuantityDTO() {}
+	public Double getValue() {
+		return value;
+	}
 
-    public Double getValue() { return value; }
-    public void setValue(Double value) { this.value = value; }
+	public void setValue(Double value) {
+		this.value = value;
+	}
 
-    public String getUnit() { return unit; }
-    public void setUnit(String unit) { this.unit = unit; }
+	public String getUnit() {
+		return unit;
+	}
 
-    public String getMeasurementType() { return measurementType; }
-    public void setMeasurementType(String measurementType) { this.measurementType = measurementType; }
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public String getMeasurementType() {
+		return measurementType;
+	}
+
+	public void setMeasurementType(String measurementType) {
+		this.measurementType = measurementType;
+	}
+
+	
+	
 }
