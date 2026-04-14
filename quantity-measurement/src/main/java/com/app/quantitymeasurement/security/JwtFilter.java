@@ -15,30 +15,25 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
 
+        // ONLY try to authenticate if the header exists and starts with Bearer
         if (header != null && header.startsWith("Bearer ")) {
-
             String token = header.substring(7);
-
             try {
                 String email = JwtUtil.extractEmail(token);
-
-              
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                email, null, Collections.emptyList());
-
-                SecurityContextHolder.getContext().setAuthentication(auth);
-
+                if (email != null) {
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                            email, null, Collections.emptyList());
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
-                return;
+                // If token is invalid, we don't block the whole app, 
+                // Spring Security will block private routes automatically later
+                System.out.println("JWT Validation failed: " + e.getMessage());
             }
         }
 

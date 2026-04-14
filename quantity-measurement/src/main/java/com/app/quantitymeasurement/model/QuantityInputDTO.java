@@ -1,25 +1,17 @@
 package com.app.quantitymeasurement.model;
 
 public class QuantityInputDTO {
-    public QuantityDTO getThisQuantityDTO() {
-		return thisQuantityDTO;
-	}
-	public void setThisQuantityDTO(QuantityDTO thisQuantityDTO) {
-		this.thisQuantityDTO = thisQuantityDTO;
-	}
-	public QuantityDTO getThatQuantityDTO() {
-		return thatQuantityDTO;
-	}
-	public void setThatQuantityDTO(QuantityDTO thatQuantityDTO) {
-		this.thatQuantityDTO = thatQuantityDTO;
-	}
-	public QuantityDTO getTargetQuantityDTO() {
-		return targetQuantityDTO;
-	}
-	public void setTargetQuantityDTO(QuantityDTO targetQuantityDTO) {
-		this.targetQuantityDTO = targetQuantityDTO;
-	}
-	private QuantityDTO thisQuantityDTO;
-    private QuantityDTO thatQuantityDTO;
-    private QuantityDTO targetQuantityDTO;
+    private QuantityDTO firstQuantity;
+    private QuantityDTO secondQuantity;
+    private String targetUnit;
+
+    // Getters and Setters
+    public QuantityDTO getFirstQuantity() { return firstQuantity; }
+    public void setFirstQuantity(QuantityDTO firstQuantity) { this.firstQuantity = firstQuantity; }
+
+    public QuantityDTO getSecondQuantity() { return secondQuantity; }
+    public void setSecondQuantity(QuantityDTO secondQuantity) { this.secondQuantity = secondQuantity; }
+
+    public String getTargetUnit() { return targetUnit; }
+    public void setTargetUnit(String targetUnit) { this.targetUnit = targetUnit; }
 }

@@ -3,7 +3,7 @@ package com.app.quantitymeasurement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,60 +17,59 @@ import com.app.quantitymeasurement.service.IQuantityMeasurementService;
 
 @RestController
 @RequestMapping("/api/v1/quantities")
+@CrossOrigin("*")   //it allow to call API from different port 
 public class QuantityMeasurementController {
 
     @Autowired
     private IQuantityMeasurementService service;
 
-    @PostMapping("/compare")
-    public ResponseEntity<QuantityMeasurementDTO> compare(@RequestBody QuantityInputDTO input) {
-        return ResponseEntity.ok(service.compare(input.getThisQuantityDTO(), input.getThatQuantityDTO()));
-    }
-
     @PostMapping("/add")
-    public ResponseEntity<QuantityMeasurementDTO> add(@RequestBody QuantityInputDTO input) {
-        return ResponseEntity.ok(service.add(input.getThisQuantityDTO(), input.getThatQuantityDTO()));
+    public QuantityMeasurementDTO add(@RequestBody QuantityInputDTO input) {
+        return service.add(input.getFirstQuantity(), input.getSecondQuantity());
     }
 
     @PostMapping("/subtract")
-    public ResponseEntity<QuantityMeasurementDTO> subtract(@RequestBody QuantityInputDTO input) {
-        return ResponseEntity.ok(service.subtract(input.getThisQuantityDTO(), input.getThatQuantityDTO()));
+    public QuantityMeasurementDTO subtract(@RequestBody QuantityInputDTO input) {
+        return service.subtract(input.getFirstQuantity(), input.getSecondQuantity());
     }
 
     @PostMapping("/multiply")
-    public ResponseEntity<QuantityMeasurementDTO> multiply(@RequestBody QuantityInputDTO input) {
-        return ResponseEntity.ok(service.multiply(input.getThisQuantityDTO(), input.getThatQuantityDTO()));
+    public QuantityMeasurementDTO multiply(@RequestBody QuantityInputDTO input) {
+        return service.multiply(input.getFirstQuantity(), input.getSecondQuantity());
     }
 
     @PostMapping("/divide")
-    public ResponseEntity<QuantityMeasurementDTO> divide(@RequestBody QuantityInputDTO input) {
-        return ResponseEntity.ok(service.divide(input.getThisQuantityDTO(), input.getThatQuantityDTO()));
+    public QuantityMeasurementDTO divide(@RequestBody QuantityInputDTO input) {
+        return service.divide(input.getFirstQuantity(), input.getSecondQuantity());
+    }
+
+    @PostMapping("/compare")
+    public QuantityMeasurementDTO compare(@RequestBody QuantityInputDTO input) {
+        return service.compare(input.getFirstQuantity(), input.getSecondQuantity());
     }
 
     @PostMapping("/convert")
-    public ResponseEntity<QuantityMeasurementDTO> convert(@RequestBody QuantityInputDTO input) {
-        return ResponseEntity.ok(service.convert(input.getThisQuantityDTO(), input.getTargetQuantityDTO()));
+    public QuantityMeasurementDTO convert(@RequestBody QuantityInputDTO input) {
+        return service.convert(input.getFirstQuantity(), input.getTargetUnit());
     }
 
-    // ================= HISTORY =================
-
     @GetMapping("/history/operation/{operation}")
-    public ResponseEntity<List<QuantityMeasurementDTO>> getByOperation(@PathVariable String operation) {
-        return ResponseEntity.ok(service.getOperationHistory(operation));
+    public List<QuantityMeasurementDTO> history(@PathVariable String operation) {
+        return service.getOperationHistory(operation);
     }
 
     @GetMapping("/history/type/{type}")
-    public ResponseEntity<List<QuantityMeasurementDTO>> getByType(@PathVariable String type) {
-        return ResponseEntity.ok(service.getMeasurementsByType(type));
+    public List<QuantityMeasurementDTO> type(@PathVariable String type) {
+        return service.getMeasurementsByType(type);
     }
 
     @GetMapping("/count/{operation}")
-    public ResponseEntity<Long> getCount(@PathVariable String operation) {
-        return ResponseEntity.ok(service.getOperationCount(operation));
+    public long count(@PathVariable String operation) {
+        return service.getOperationCount(operation);
     }
 
-    @GetMapping("/history/errors")
-    public ResponseEntity<List<QuantityMeasurementDTO>> getErrors() {
-        return ResponseEntity.ok(service.getErrorHistory());
+    @GetMapping("/history/error")
+    public List<QuantityMeasurementDTO> errors() {
+        return service.getErrorHistory();
     }
 }
