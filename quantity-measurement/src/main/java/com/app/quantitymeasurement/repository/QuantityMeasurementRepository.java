@@ -24,4 +24,6 @@ public interface QuantityMeasurementRepository
 
     // Error history
     List<QuantityMeasurementEntity> findByErrorTrue();
+
+    List<QuantityMeasurementEntity> findByMeasurementTypeAndUserEmail(String type, String email);
 }

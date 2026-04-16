@@ -17,7 +17,7 @@ public class QuantityMeasurementEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private String userEmail;
     private double thisValue;
     private double thatValue;
     private String measurementType;
@@ -37,6 +37,8 @@ public class QuantityMeasurementEntity {
     }
 
     // Getters and Setters
+    public String getUserEmail() { return userEmail; }
+    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public double getThisValue() { return thisValue; }

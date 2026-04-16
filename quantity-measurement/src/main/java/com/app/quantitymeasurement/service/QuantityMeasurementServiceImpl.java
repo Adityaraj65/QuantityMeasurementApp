@@ -1,9 +1,10 @@
 package com.app.quantitymeasurement.service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
@@ -45,6 +46,8 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
     private void save(QuantityMeasurementDTO dto) {
         QuantityMeasurementEntity e = new QuantityMeasurementEntity();
+        
+        // Mapping existing fields
         e.setThisValue(dto.getThisValue());
         e.setThatValue(dto.getThatValue());
         e.setMeasurementType(dto.getMeasurementType());
@@ -52,6 +55,14 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         e.setResultValue(dto.getResultValue());
         e.setError(dto.isError());
         e.setErrorMessage(dto.getErrorMessage());
+
+        // Security Logic using Authentication
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
+            e.setUserEmail(auth.getName()); 
+        }
+
         repository.save(e);
     }
 
@@ -125,7 +136,15 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
     @Override
     public List<QuantityMeasurementDTO> getMeasurementsByType(String type) {
-        return repository.findByMeasurementType(type).stream().map(this::mapToDTO).collect(Collectors.toList());
+       
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String currentEmail = auth.getName();
+                              
+        
+        return repository.findByMeasurementTypeAndUserEmail(type, currentEmail)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
