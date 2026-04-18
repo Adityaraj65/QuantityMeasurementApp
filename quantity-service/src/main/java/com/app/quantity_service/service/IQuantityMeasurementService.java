@@ -11,7 +11,7 @@ public interface IQuantityMeasurementService {
     QuantityMeasurementDTO multiply(QuantityDTO q1, QuantityDTO q2, String email);
     QuantityMeasurementDTO divide(QuantityDTO q1, QuantityDTO q2, String email);
     QuantityMeasurementDTO compare(QuantityDTO q1, QuantityDTO q2, String email);
-    QuantityMeasurementDTO convert(QuantityDTO q1, String targetUnit, String email);
+    QuantityMeasurementDTO convert(QuantityDTO q, String targetUnit, String email);
     
     List<QuantityMeasurementDTO> getOperationHistory(String operation, String email);
     List<QuantityMeasurementDTO> getMeasurementsByType(String type, String email);

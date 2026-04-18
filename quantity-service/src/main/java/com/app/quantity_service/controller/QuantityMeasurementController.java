@@ -22,53 +22,52 @@ public class QuantityMeasurementController {
     @Autowired
     private IQuantityMeasurementService service;
 
+    // ✅ PUBLIC APIs
+
     @PostMapping("/add")
-    public QuantityMeasurementDTO add(@RequestBody QuantityInputDTO input, @RequestHeader("user-email") String email) {
-        return service.add(input.getFirstQuantity(), input.getSecondQuantity(), email);
+    public QuantityMeasurementDTO add(@RequestBody QuantityInputDTO input) {
+        return service.add(input.getFirstQuantity(), input.getSecondQuantity(), null);
     }
 
     @PostMapping("/subtract")
-    public QuantityMeasurementDTO subtract(@RequestBody QuantityInputDTO input, @RequestHeader("user-email") String email) {
-        return service.subtract(input.getFirstQuantity(), input.getSecondQuantity(), email);
+    public QuantityMeasurementDTO subtract(@RequestBody QuantityInputDTO input) {
+        return service.subtract(input.getFirstQuantity(), input.getSecondQuantity(), null);
     }
 
     @PostMapping("/multiply")
-    public QuantityMeasurementDTO multiply(@RequestBody QuantityInputDTO input, @RequestHeader("user-email") String email) {
-        return service.multiply(input.getFirstQuantity(), input.getSecondQuantity(), email);
+    public QuantityMeasurementDTO multiply(@RequestBody QuantityInputDTO input) {
+        return service.multiply(input.getFirstQuantity(), input.getSecondQuantity(), null);
     }
 
     @PostMapping("/divide")
-    public QuantityMeasurementDTO divide(@RequestBody QuantityInputDTO input, @RequestHeader("user-email") String email) {
-        return service.divide(input.getFirstQuantity(), input.getSecondQuantity(), email);
+    public QuantityMeasurementDTO divide(@RequestBody QuantityInputDTO input) {
+        return service.divide(input.getFirstQuantity(), input.getSecondQuantity(), null);
     }
 
     @PostMapping("/compare")
-    public QuantityMeasurementDTO compare(@RequestBody QuantityInputDTO input, @RequestHeader("user-email") String email) {
-        return service.compare(input.getFirstQuantity(), input.getSecondQuantity(), email);
+    public QuantityMeasurementDTO compare(@RequestBody QuantityInputDTO input) {
+        return service.compare(input.getFirstQuantity(), input.getSecondQuantity(), null);
     }
 
     @PostMapping("/convert")
-    public QuantityMeasurementDTO convert(@RequestBody QuantityInputDTO input, @RequestHeader("user-email") String email) {
-        return service.convert(input.getFirstQuantity(), input.getTargetUnit(), email);
+    public QuantityMeasurementDTO convert(@RequestBody QuantityInputDTO input) {
+        return service.convert(input.getFirstQuantity(), input.getTargetUnit(), null);
     }
 
-    @GetMapping("/history/operation/{operation}")
-    public List<QuantityMeasurementDTO> history(@PathVariable String operation, @RequestHeader("user-email") String email) {
-        return service.getOperationHistory(operation, email);
-    }
-
+    // 🔐 PROTECTED API
     @GetMapping("/history/type/{type}")
-    public List<QuantityMeasurementDTO> type(@PathVariable String type, @RequestHeader("user-email") String email) {
+    public List<QuantityMeasurementDTO> getByType(
+            @PathVariable String type,
+            @RequestHeader("user-email") String email) {
+
         return service.getMeasurementsByType(type, email);
     }
 
-    @GetMapping("/count/{operation}")
-    public long count(@PathVariable String operation, @RequestHeader("user-email") String email) {
-        return service.getOperationCount(operation, email);
-    }
+    @GetMapping("/history/operation/{operation}")
+    public List<QuantityMeasurementDTO> history(
+            @PathVariable String operation,
+            @RequestHeader("user-email") String email) {
 
-    @GetMapping("/history/error")
-    public List<QuantityMeasurementDTO> errors(@RequestHeader("user-email") String email) {
-        return service.getErrorHistory(email);
+        return service.getOperationHistory(operation, email);
     }
 }
