@@ -35,7 +35,9 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
     private void validateArithmeticSupport(QuantityDTO q1) {
         if (!getUnit(q1).supportsArithmetic()) {
-            throw new UnsupportedOperationException(q1.getMeasurementType() + " does not support arithmetic operations.");
+            throw new UnsupportedOperationException(
+                q1.getMeasurementType() + " does not support arithmetic operations."
+            );
         }
     }
 
@@ -50,82 +52,125 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         e.setMeasurementType(dto.getMeasurementType());
         e.setOperation(dto.getOperation());
         e.setResultValue(dto.getResultValue());
+        e.setResultUnit(dto.getResultUnit()); // ✅ IMPORTANT
         e.setError(dto.isError());
         e.setErrorMessage(dto.getErrorMessage());
         repository.save(e);
     }
 
-    private QuantityMeasurementDTO buildResponse(QuantityDTO q1, QuantityDTO q2, double result, String op) {
+    // ✅ UPDATED: Quantity pass kar rahe hain instead of double
+    private QuantityMeasurementDTO buildResponse(
+            QuantityDTO q1,
+            QuantityDTO q2,
+            Quantity result,
+            String op) {
+
         QuantityMeasurementDTO dto = new QuantityMeasurementDTO();
+
         dto.setThisValue(q1.getValue());
         dto.setThatValue(q2 != null ? q2.getValue() : 0);
         dto.setMeasurementType(q1.getMeasurementType());
         dto.setOperation(op);
-        dto.setResultValue(result);
+
+        dto.setResultValue(result.getValue()); // ✅ value
+        dto.setResultUnit(result.getUnit().getUnitName()); // ✅ unit fix
+
         dto.setError(false);
+
         save(dto);
         return dto;
     }
+
+    // ================= ADD =================
     @Override
     public QuantityMeasurementDTO add(QuantityDTO q1, QuantityDTO q2) {
         validateArithmeticSupport(q1);
-        double result = toQuantity(q1).add(toQuantity(q2), getUnit(q1)).getValue();
+
+        Quantity result = toQuantity(q1)
+                .add(toQuantity(q2), getUnit(q1)); // target = q1 unit
+
         return buildResponse(q1, q2, result, "ADD");
     }
 
+    // ================= SUBTRACT =================
     @Override
     public QuantityMeasurementDTO subtract(QuantityDTO q1, QuantityDTO q2) {
         validateArithmeticSupport(q1);
-        double result = toQuantity(q1).subtract(toQuantity(q2), getUnit(q1)).getValue();
+
+        Quantity result = toQuantity(q1)
+                .subtract(toQuantity(q2), getUnit(q1));
+
         return buildResponse(q1, q2, result, "SUBTRACT");
     }
 
+    // ================= MULTIPLY =================
     @Override
     public QuantityMeasurementDTO multiply(QuantityDTO q1, QuantityDTO q2) {
         validateArithmeticSupport(q1);
-        double result = toQuantity(q1).multiply(toQuantity(q2), getUnit(q1)).getValue();
+
+        Quantity result = toQuantity(q1)
+                .multiply(toQuantity(q2), getUnit(q1));
+
         return buildResponse(q1, q2, result, "MULTIPLY");
     }
 
+    // ================= DIVIDE =================
     @Override
     public QuantityMeasurementDTO divide(QuantityDTO q1, QuantityDTO q2) {
         validateArithmeticSupport(q1);
-        double result = toQuantity(q1).divide(toQuantity(q2), getUnit(q1)).getValue();
+
+        Quantity result = toQuantity(q1)
+                .divide(toQuantity(q2), getUnit(q1));
+
         return buildResponse(q1, q2, result, "DIVIDE");
     }
 
+    // ================= COMPARE =================
     @Override
     public QuantityMeasurementDTO compare(QuantityDTO q1, QuantityDTO q2) {
+
         boolean isEqual = toQuantity(q1).equals(toQuantity(q2));
+
         QuantityMeasurementDTO dto = new QuantityMeasurementDTO();
         dto.setThisValue(q1.getValue());
         dto.setThatValue(q2.getValue());
         dto.setMeasurementType(q1.getMeasurementType());
         dto.setOperation("COMPARE");
-        dto.setResultValue(isEqual ? 1.0 : 0.0); // 1.0 for true, 0.0 for false
+        dto.setResultValue(isEqual ? 1.0 : 0.0);
         dto.setResultString(String.valueOf(isEqual));
+
         save(dto);
         return dto;
     }
 
+    // ================= CONVERT =================
     @Override
     public QuantityMeasurementDTO convert(QuantityDTO q, String targetUnit) {
+
         QuantityDTO targetDto = new QuantityDTO();
         targetDto.setMeasurementType(q.getMeasurementType());
         targetDto.setUnit(targetUnit);
-        
+
         Quantity result = toQuantity(q).convertTo(getUnit(targetDto));
-        return buildResponse(q, null, result.getValue(), "CONVERT");
+
+        return buildResponse(q, null, result, "CONVERT");
     }
 
+    // ================= HISTORY =================
     @Override
     public List<QuantityMeasurementDTO> getOperationHistory(String operation) {
-        return repository.findByOperation(operation).stream().map(this::mapToDTO).collect(Collectors.toList());
+        return repository.findByOperation(operation)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<QuantityMeasurementDTO> getMeasurementsByType(String type) {
-        return repository.findByMeasurementType(type).stream().map(this::mapToDTO).collect(Collectors.toList());
+        return repository.findByMeasurementType(type)
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -135,7 +180,10 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
 
     @Override
     public List<QuantityMeasurementDTO> getErrorHistory() {
-        return repository.findByErrorTrue().stream().map(this::mapToDTO).collect(Collectors.toList());
+        return repository.findByErrorTrue()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
     }
 
     private QuantityMeasurementDTO mapToDTO(QuantityMeasurementEntity e) {
@@ -145,6 +193,7 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         dto.setMeasurementType(e.getMeasurementType());
         dto.setOperation(e.getOperation());
         dto.setResultValue(e.getResultValue());
+        dto.setResultUnit(e.getResultUnit()); // ✅ IMPORTANT
         dto.setError(e.isError());
         return dto;
     }

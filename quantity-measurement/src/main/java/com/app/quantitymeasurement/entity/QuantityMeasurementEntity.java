@@ -23,7 +23,7 @@ public class QuantityMeasurementEntity {
     private String measurementType;
     private String operation;
     private double resultValue;
-
+    private String resultUnit;
     // Force the column name to 'error' to match Hibernate's insert query
     @Column(name = "error", nullable = false)
     private boolean error = false; 
@@ -37,6 +37,13 @@ public class QuantityMeasurementEntity {
     }
 
     // Getters and Setters
+    public String getResultUnit() {
+        return resultUnit;
+    }
+
+    public void setResultUnit(String resultUnit) {
+        this.resultUnit = resultUnit;
+    }
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public double getThisValue() { return thisValue; }

@@ -54,27 +54,41 @@ public class Quantity {
     // ================= MULTIPLY =================
     public Quantity multiply(Quantity other, IMeasurable target) {
 
-        double base1 = unit.convertToBaseUnit(this.value);
-        double base2 = other.unit.convertToBaseUnit(other.value);
+        // Convert other value into this unit
+        double otherInThisUnit = other.unit
+                .convertToBaseUnit(other.value);
 
-        double resultBase = base1 * base2;
-        double result = target.convertFromBaseUnit(resultBase);
+        double thisInBase = this.unit
+                .convertToBaseUnit(this.value);
 
-        return new Quantity(result, target);
+        // Bring both to same unit (this unit)
+        double otherConverted = this.unit
+                .convertFromBaseUnit(otherInThisUnit);
+
+        // Multiply
+        double resultValue = this.value * otherConverted;
+
+        return new Quantity(resultValue, target);
     }
 
     // ================= DIVIDE =================
     public Quantity divide(Quantity other, IMeasurable target) {
 
-        double base1 = unit.convertToBaseUnit(this.value);
-        double base2 = other.unit.convertToBaseUnit(other.value);
+        if (other.value == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
 
-        double resultBase = base1 / base2;
-        double result = target.convertFromBaseUnit(resultBase);
+        // Convert other into this unit
+        double otherInBase = other.unit
+                .convertToBaseUnit(other.value);
 
-        return new Quantity(result, target);
+        double otherConverted = this.unit
+                .convertFromBaseUnit(otherInBase);
+
+        double resultValue = this.value / otherConverted;
+
+        return new Quantity(resultValue, target);
     }
-
     // ================= EQUAL =================
     @Override
     public boolean equals(Object obj) {

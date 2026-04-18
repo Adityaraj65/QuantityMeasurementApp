@@ -10,6 +10,14 @@ public class QuantityMeasurementDTO {
     private String resultString;
     private boolean error;
     private String errorMessage;
+    private String resultUnit;
+    public String getResultUnit() {
+        return resultUnit;
+    }
+
+    public void setResultUnit(String resultUnit) {
+        this.resultUnit = resultUnit;
+    }
 
     public double getThisValue() {
         return thisValue;
