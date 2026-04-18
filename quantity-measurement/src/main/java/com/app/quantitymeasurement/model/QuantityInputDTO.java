@@ -1,18 +1,17 @@
 package com.app.quantitymeasurement.model;
 
-/**
- * Wrapper for two quantities (used in API request)
- */
 public class QuantityInputDTO {
+    private QuantityDTO firstQuantity;
+    private QuantityDTO secondQuantity;
+    private String targetUnit;
 
-    private QuantityDTO thisQuantityDTO;
-    private QuantityDTO thatQuantityDTO;
+    // Getters and Setters
+    public QuantityDTO getFirstQuantity() { return firstQuantity; }
+    public void setFirstQuantity(QuantityDTO firstQuantity) { this.firstQuantity = firstQuantity; }
 
-    public QuantityDTO getThisQuantityDTO() {
-        return thisQuantityDTO;
-    }
+    public QuantityDTO getSecondQuantity() { return secondQuantity; }
+    public void setSecondQuantity(QuantityDTO secondQuantity) { this.secondQuantity = secondQuantity; }
 
-    public QuantityDTO getThatQuantityDTO() {
-        return thatQuantityDTO;
-    }
+    public String getTargetUnit() { return targetUnit; }
+    public void setTargetUnit(String targetUnit) { this.targetUnit = targetUnit; }
 }

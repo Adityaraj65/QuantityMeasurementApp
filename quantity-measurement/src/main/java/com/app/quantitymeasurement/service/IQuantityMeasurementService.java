@@ -5,16 +5,26 @@ import java.util.List;
 import com.app.quantitymeasurement.model.QuantityDTO;
 import com.app.quantitymeasurement.model.QuantityMeasurementDTO;
 
-/**
- * Service interface
- */
 public interface IQuantityMeasurementService {
 
     QuantityMeasurementDTO compare(QuantityDTO q1, QuantityDTO q2);
 
+    QuantityMeasurementDTO convert(QuantityDTO q, String targetUnit);
+
     QuantityMeasurementDTO add(QuantityDTO q1, QuantityDTO q2);
 
-    List<QuantityMeasurementDTO> getByOperation(String operation);
+    QuantityMeasurementDTO subtract(QuantityDTO q1, QuantityDTO q2);
+
+    QuantityMeasurementDTO multiply(QuantityDTO q1, QuantityDTO q2);
+
+    QuantityMeasurementDTO divide(QuantityDTO q1, QuantityDTO q2);
+
+    
+    List<QuantityMeasurementDTO> getOperationHistory(String operation);
+
+    List<QuantityMeasurementDTO> getMeasurementsByType(String type);
+
+    long getOperationCount(String operation);
 
     List<QuantityMeasurementDTO> getErrorHistory();
 }

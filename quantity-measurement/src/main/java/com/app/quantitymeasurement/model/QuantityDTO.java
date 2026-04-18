@@ -6,8 +6,6 @@ public class QuantityDTO {
     private String unit;
     private String measurementType;
 
-    public QuantityDTO() {}   // ✅ REQUIRED
-
     public double getValue() {
         return value;
     }
