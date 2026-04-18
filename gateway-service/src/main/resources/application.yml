@@ -1,9 +1,6 @@
-server:
-  port: 8080
-
 spring:
   application:
-    name: gateway-service # Ye naam Eureka dashboard par dikhega
+    name: gateway-service
   cloud:
     gateway:
       routes:
@@ -15,14 +12,3 @@ spring:
           uri: lb://QUANTITY-SERVICE
           predicates:
             - Path=/api/v1/quantities/**
-          filters:
-            - name: AuthenticationFilter
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true # Isse communication fast ho jati hai
