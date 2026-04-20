@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.quantitymeasurement.model.QuantityInputDTO;
 import com.app.quantitymeasurement.model.QuantityMeasurementDTO;
 import com.app.quantitymeasurement.service.IQuantityMeasurementService;
-@CrossOrigin(origins = "https://quantity-measurement-app-frontend-omega-eosin.vercel.app/")
+@CrossOrigin(origins = {"https://quantity-measurement-app-frontend-omega-eosin.vercel.app/","http://localhost:4200"})
 @RestController
 
 @RequestMapping("/api/v1/quantities")
