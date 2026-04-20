@@ -13,17 +13,23 @@ import com.app.quantitymeasurement.security.JwtFilter;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configure(http))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // Login/Register is public
-                .requestMatchers("/api/v1/quantities/history/**").authenticated() // History is PRIVATE
-                .requestMatchers("/api/v1/quantities/**").permitAll() // Calculations are PUBLIC
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // 1. CORS ko enable karo security level par
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfig = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfig.setAllowedOrigins(java.util.List.of("https://quantity-measurement-app-frontend-omega-eosin.vercel.app"));
+                    corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfig.setAllowedHeaders(java.util.List.of("*"));
+                    corsConfig.setAllowCredentials(true);
+                    return corsConfig;
+                }))
+                // 2. CSRF disable karo (kyunki hum JWT/stateless API use kar rahe hain)
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**").permitAll() // Register/Login allow karo
+                        .anyRequest().authenticated()
+                );
 
         return http.build();
     }
